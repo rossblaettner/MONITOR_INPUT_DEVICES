@@ -1,0 +1,144 @@
+{\rtf1\ansi\deff0\deftab720{\fonttbl{\f0\fnil\fcharset1 Courier New;}}{\colortbl\red0\green0\blue0;\red240\green244\blue249;\red0\green128\blue0;\red0\green0\blue255;\red0\green0\blue144;\red128\green128\blue0;\red255\green0\blue0;\red255\green128\blue0;\red90\green90\blue90;\red128\green128\blue128;\red220\green20\blue60;\red153\green51\blue153;\red0\green128\blue255;\red192\green192\blue192;\red0\green153\blue51;\red255\green255\blue255;\red5\green5\blue5;}
+\f0\fs20\cf0 \cf10 #Region \cf2\i ;**** Directives created by AutoIt3Wrapper_GUI ****\par
+\cf0\i0 \cf10 #AutoIt3Wrapper_Outfile_x64=hello.exe\par
+\cf0 \cf10 #EndRegion \cf2\i ;**** Directives created by AutoIt3Wrapper_GUI ****\par
+\cf0\i0 \cf5 #include\cf0  \cf6 <MsgBoxConstants.au3>\cf0 \par
+\cf5 #include\cf0  \cf6 <StructureConstants.au3>\cf0 \par
+\cf5 #include\cf0  \cf6 <WinAPI.au3>\cf0 \par
+\cf5 #include\cf0  \cf6 <WindowsConstants.au3>\cf0 \par
+\cf5 #include\cf0  \cf6 <FileConstants.au3>\cf0 \par
+\cf5 #include\cf0  \cf6 <File.au3>\cf0 \par
+\cf5 #include\cf0  \cf6 <Array.au3>\cf0 \par
+\par
+\cf3 Dim\cf0  \cf8 $keyCodeArray\cf0 \par
+\cf12 _FileReadToArray\cf7 (\cf0  \cf7 (\cf0  \cf5 @DesktopDir\cf0  \cf7 &\cf0  \cf6 "\\HELLO-KEYS.TXT"\cf0  \cf7 ),\cf0  \cf8 $keyCodeArray\cf7 ,\cf0  \cf3 1\cf7 ,\cf0  \cf5 @TAB\cf0  \cf7 )\cf0 \par
+\par
+\cf4 Opt\cf7 (\cf0  \cf6 "WinTitleMatchMode"\cf7 ,\cf0  \cf3 2\cf0  \cf7 )\cf0 \par
+\cf4 OnAutoItExitRegister\cf7 (\cf0  \cf6 "Cleanup"\cf0  \cf7 )\cf0 \par
+\par
+\cf3 Local\cf0  \cf8 $fHdl\cf0 \par
+\cf8 $fPth\cf0  \cf7 =\cf0  \cf7 (\cf0  \cf5 @DesktopDir\cf0  \cf7 &\cf0  \cf6 "\\Log\\"\cf0  \cf7 &\cf0  \cf6 "Log.TXT"\cf0  \cf7 )\cf0 \par
+\cf8 $fHdl\cf0  \cf7 =\cf0  \cf4 FileOpen\cf7 (\cf0  \cf8 $fPth\cf7 ,\cf0  \cf8 $FO_APPEND\cf0  \cf7 )\cf0 \par
+\par
+\par
+\cf3 Global\cf0  \cf8 $g_hHook\cf7 ,\cf0  \cf8 $g_hStub_KbdProc\cf7 ,\cf0  \cf8 $g_hStub_MseProc\cf0 \par
+\cf3 Local\cf0  \cf8 $hMod\cf0 \par
+\par
+\cf8 $g_hStub_KbdProc\cf0  \cf7 =\cf0  \cf4 DllCallbackRegister\cf7 (\cf0  \cf6 "_KbdProc"\cf7 ,\cf0  \cf6 "long"\cf7 ,\cf0  \cf6 "int;wparam;lparam"\cf0  \cf7 )\cf0 \par
+\cf2\i ; $g_hStub_MseProc = DllCallbackRegister( "_MseProc", "long", "int;wparam;lparam" )\par
+\cf0\i0 \par
+\cf8 $hMod\cf0  \cf7 =\cf0  \cf12 _WinAPI_GetModuleHandle\cf7 (\cf0  \cf3 0\cf0  \cf7 )\cf0 \par
+\cf8 $kbd_hHook\cf0  \cf7 =\cf0  \cf12 _WinAPI_SetWindowsHookEx\cf7 (\cf0  \cf8 $WH_KEYBOARD_LL\cf7 ,\cf0  \cf4 DllCallbackGetPtr\cf7 (\cf0  \cf8 $g_hStub_KbdProc\cf0  \cf7 ),\cf0  \cf8 $hMod\cf0  \cf7 )\cf0 \par
+\cf2\i ; $mse_hHook = _WinAPI_SetWindowsHookEx( $WH_MOUSE_LL, DllCallbackGetPtr( $g_hStub_MseProc ), $hMod )\par
+\cf0\i0 \par
+\cf3 While\cf0  \cf7 (\cf0  \cf3 True\cf0  \cf7 )\cf0 \par
+\par
+   \cf4 WinWaitActive\cf7 (\cf0  \cf6 "Microsoft Excel"\cf0  \cf7 )\cf0 \par
+\par
+   \cf4 FileWrite\cf7 (\cf0  \cf8 $fHdl\cf7 ,\cf0  \cf7 (\cf0  \cf5 @CRLF\cf0  \cf7 &\cf0  \cf6 "Activate: Microsoft Excel"\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0  \cf7 )\cf0 \par
+   \cf4 ConsoleWrite\cf7 (\cf0  \cf5 @CRLF\cf0  \cf7 &\cf0  \cf6 "Activate: Microsoft Excel"\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+   \cf4 Sleep\cf7 (\cf0  \cf3 10\cf0  \cf7 )\cf0 \par
+\par
+   \cf4 WinWaitNotActive\cf7 (\cf0  \cf6 "Microsoft Excel"\cf0  \cf7 )\cf0 \par
+\par
+   \cf4 FileWrite\cf7 (\cf0  \cf8 $fHdl\cf7 ,\cf0  \cf7 (\cf0  \cf5 @CRLF\cf0  \cf7 &\cf0  \cf6 "Deactivate: Microsoft Excel"\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0  \cf7 )\cf0 \par
+   \cf4 ConsoleWrite\cf7 (\cf0  \cf5 @CRLF\cf0  \cf7 &\cf0  \cf6 "Deactivate: Microsoft Excel"\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+\cf3 WEnd\cf0 \par
+\par
+\par
+\cf3 Func\cf0  EvaluateKey\cf7 (\cf0  \cf8 $iKeycode\cf0  \cf7 )\cf0 \par
+\par
+    \cf3 If\cf0  \cf7 (\cf0  \cf7 (\cf0  \cf8 $iKeycode\cf0  \cf7 >\cf0  \cf3 159\cf0  \cf7 )\cf0  \cf3 And\cf0  \cf7 (\cf0  \cf8 $iKeycode\cf0  \cf7 <\cf0  \cf3 164\cf0  \cf7 )\cf0  \cf7 )\cf0  \cf3 Then\cf0 \par
+\par
+        \cf3 Return\cf0 \par
+\par
+    \cf3 ElseIf\cf0  \cf7 (\cf0  \cf8 $iKeycode\cf0  \cf7 =\cf0  \cf3 27\cf0  \cf7 )\cf0  \cf3 Then\cf0  \cf2\i ; esc key\par
+\cf0\i0 \par
+        \cf3 Exit\cf0 \par
+\par
+    \cf3 EndIf\cf0 \par
+\par
+\cf3 EndFunc\cf0    \cf2\i ;==>EvaluateKey\par
+\cf0\i0 \par
+\par
+\cf2\i ; ===========================================================\par
+\cf0\i0 \cf2\i ; callback function\par
+\cf0\i0 \cf2\i ; ===========================================================\par
+\cf0\i0 \par
+\cf3 Func\cf0  _KbdProc\cf7 (\cf0  \cf8 $nCode\cf7 ,\cf0  \cf8 $wParam\cf7 ,\cf0  \cf8 $lParam\cf0  \cf7 )\cf0 \par
+\par
+    \cf3 Local\cf0  \cf8 $tKEYHOOKS\cf0 \par
+    \cf8 $tKEYHOOKS\cf0  \cf7 =\cf0  \cf4 DllStructCreate\cf7 (\cf0  \cf8 $tagKBDLLHOOKSTRUCT\cf7 ,\cf0  \cf8 $lParam\cf0  \cf7 )\cf0 \par
+\par
+   \cf3 If\cf0  \cf3 Not\cf0  \cf7 (\cf0  \cf4 WinActive\cf0  \cf7 (\cf0  \cf6 "Microsoft Excel"\cf0  \cf7 )\cf0  \cf7 )\cf0  \cf3 Then\cf0 \par
+\par
+       \cf3 Return\cf0  \cf2\i ;  _WinAPI_CallNextHookEx( $g_hHook, $nCode, $wParam, $lParam )\par
+\cf0\i0 \par
+   \cf3 ElseIf\cf0  \cf7 (\cf0  \cf8 $nCode\cf0  \cf7 <\cf0  \cf3 0\cf0  \cf7 )\cf0  \cf3 Then\cf0 \par
+\par
+        \cf3 Return\cf0  \cf2\i ;  _WinAPI_CallNextHookEx( $g_hHook, $nCode, $wParam, $lParam )\par
+\cf0\i0 \par
+    \cf3 EndIf\cf0 \par
+\par
+    \cf3 If\cf0  \cf7 (\cf0  \cf8 $wParam\cf0  \cf7 =\cf0  \cf8 $WM_KEYDOWN\cf0  \cf7 )\cf0  \cf3 Then\cf0 \par
+\par
+        EvaluateKey\cf7 (\cf0  \cf4 DllStructGetData\cf7 (\cf0  \cf8 $tKEYHOOKS\cf7 ,\cf0  \cf6 "vkCode"\cf0  \cf7 )\cf0  \cf7 )\cf0 \par
+\par
+    \cf3 Else\cf0 \par
+\par
+        \cf3 Local\cf0  \cf8 $iFlags\cf0  \cf7 =\cf0  \cf4 DllStructGetData\cf7 (\cf0  \cf8 $tKEYHOOKS\cf7 ,\cf0  \cf6 "flags"\cf0  \cf7 )\cf0 \par
+       \cf3 Local\cf0  \cf8 $scanCode\cf0  \cf7 =\cf0  \cf4 DllStructGetData\cf7 (\cf0  \cf8 $tKEYHOOKS\cf7 ,\cf0  \cf6 "scanCode"\cf0  \cf7 )\cf0 \par
+       \cf3 Local\cf0  \cf8 $vkbdCode\cf0  \cf7 =\cf0  \cf4 DllStructGetData\cf7 (\cf0  \cf8 $tKEYHOOKS\cf7 ,\cf0  \cf6 "vkCode"\cf0  \cf7 )\cf0 \par
+       \cf3 Local\cf0  \cf8 $index\cf0  \cf7 =\cf0  \cf12 _ArraySearch\cf7 (\cf0  \cf8 $keyCodeArray\cf7 ,\cf0  \cf8 $vkbdCode\cf0  \cf7 )\cf0 \par
+       \cf3 Local\cf0  \cf8 $vkString\cf0  \cf7 =\cf0  \cf8 $keyCodeArray\cf7 [\cf0  \cf8 $index\cf0  \cf7 ][\cf0  \cf3 1\cf0  \cf7 ]\cf0 \par
+\par
+        \cf3 Switch\cf0  \cf8 $iFlags\cf0 \par
+\par
+            \cf3 Case\cf0  \cf8 $LLKHF_ALTDOWN\cf0 \par
+                \cf4 ConsoleWrite\cf7 (\cf0  \cf6 "$LLKHF_ALTDOWN"\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+            \cf3 Case\cf0  \cf8 $LLKHF_EXTENDED\cf0 \par
+                \cf4 ConsoleWrite\cf7 (\cf0  \cf6 "$LLKHF_EXTENDED"\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+            \cf3 Case\cf0  \cf8 $LLKHF_INJECTED\cf0 \par
+                \cf4 ConsoleWrite\cf7 (\cf0  \cf6 "$LLKHF_INJECTED"\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+            \cf3 Case\cf0  \cf8 $LLKHF_UP\cf0 \par
+               \cf4 FileWrite\cf7 (\cf0  \cf8 $fHdl\cf7 ,\cf0  \cf7 (\cf0  \cf8 $vkString\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0  \cf7 )\cf0 \par
+               \cf4 ConsoleWrite\cf7 (\cf0  \cf8 $vkString\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+           \cf3 Case\cf0  \cf3 Else\cf0 \par
+               \cf4 FileWrite\cf7 (\cf0  \cf8 $fHdl\cf7 ,\cf0  \cf7 (\cf0  \cf8 $vkString\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0  \cf7 )\cf0 \par
+               \cf4 ConsoleWrite\cf7 (\cf0  \cf8 $vkString\cf0  \cf7 &\cf0  \cf6 " on "\cf0  \cf7 &\cf0  timeStamp\cf7 ()\cf0  \cf7 &\cf0  \cf5 @CRLF\cf0  \cf7 )\cf0 \par
+\par
+       \cf3 EndSwitch\cf0 \par
+\par
+    \cf3 EndIf\cf0 \par
+\par
+    \cf3 Return\cf0  \cf12 _WinAPI_CallNextHookEx\cf7 (\cf0  \cf8 $g_hHook\cf7 ,\cf0  \cf8 $nCode\cf7 ,\cf0  \cf8 $wParam\cf7 ,\cf0  \cf8 $lParam\cf0  \cf7 )\cf0 \par
+\par
+\cf3 EndFunc\cf0    \cf2\i ;==>_KeyProcdadf\par
+\cf0\i0 \par
+\cf3 Func\cf0  timeStamp\cf7 ()\cf0 \par
+\par
+   \cf3 Return\cf0  \cf7 (\cf0  \cf5 @YEAR\cf0  \cf7 &\cf0  \cf6 "-"\cf0  \cf7 &\cf0  \cf5 @MON\cf0  \cf7 &\cf0  \cf6 "-"\cf0  \cf7 &\cf0  \cf5 @YEAR\cf0  \cf7 &\cf0  \cf6 " at "\cf0  \cf7 &\cf0  \cf5 @HOUR\cf0  \cf7 &\cf0  \cf6 ":"\cf0  \cf7 &\cf0  \cf5 @MIN\cf0  \cf7 &\cf0  \cf6 ":"\cf0  \cf7 &\cf0  \cf5 @SEC\cf0  \cf7 &\cf0  \cf6 "."\cf0  \cf7 &\cf0  \cf5 @MSEC\cf0  \cf7 )\cf0 \par
+\par
+\cf3 EndFunc\cf0 \par
+\par
+\cf3 Func\cf0  _MseProc\cf7 (\cf0  \cf8 $nCode\cf7 ,\cf0  \cf8 $wParam\cf7 ,\cf0  \cf8 $lParam\cf0  \cf7 )\cf0 \par
+\par
+    \cf2\i ; Return _WinAPI_CallNextHookEx( $g_hHook, $nCode, $wParam, $lParam )\par
+\cf0\i0 \par
+\cf3 EndFunc\cf0     \cf2\i ;==>_MseProc\par
+\cf0\i0 \par
+\par
+\cf3 Func\cf0  Cleanup\cf7 ()\cf0 \par
+\par
+    \cf12 _WinAPI_UnhookWindowsHookEx\cf7 (\cf0  \cf8 $g_hHook\cf0  \cf7 )\cf0 \par
+    \cf4 DllCallbackFree\cf7 (\cf0  \cf8 $g_hStub_KbdProc\cf0  \cf7 )\cf0 \par
+\par
+   \cf4 FileClose\cf7 (\cf0  \cf8 $fHdl\cf0  \cf7 )\cf0 \par
+\par
+\cf3 EndFunc\cf0    \cf2\i ;==>Cleanup}
